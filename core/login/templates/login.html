@@ -1,100 +1,104 @@
 {% load static %} 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-	<title>Login V15</title>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-<!--===============================================================================================-->	
-	<link rel="icon" type="image/png" href="{% static 'core/images/icons/favicon.ico' %}"/>
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="{% static 'core/vendor/bootstrap/css/bootstrap.min.css' %}">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="{% static 'core/fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="{% static 'core/fonts/Linearicons-Free-v1.0.0/icon-font.min.css' %}">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="{% static 'core/vendor/animate/animate.css' %}">
-<!--===============================================================================================-->	
-	<link rel="stylesheet" type="text/css" href="{% static 'core/vendor/css-hamburgers/hamburgers.min.css' %}">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="{% static 'core/vendor/animsition/css/animsition.min.css' %}">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="{% static 'core/vendor/select2/select2.min.css' %}">
-<!--===============================================================================================-->	
-	<link rel="stylesheet" type="text/css" href="{% static 'core/vendor/daterangepicker/daterangepicker.css' %}">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="{% static 'core/css/util.css' %}">
-	<link rel="stylesheet" type="text/css" href="{% static 'core/css/main.css' %}">
-<!--===============================================================================================-->
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0" />
+  <title>Workflow - Login</title>
+
+  <!-- CSS  -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <link href="{% static 'css/style.css' %}" type="text/css" rel="stylesheet" media="screen,projection" />
 </head>
-<body>
-	
-	<div class="limiter">
-		<div class="container-login100">
-			<div class="wrap-login100">
-				<div class="login100-form-title" style="background-image: url({% static 'core/images/bg-01.jpg' %});">
-					<span class="login100-form-title-1">
-						Iniciar Sesión
-					</span>
-				</div>
+<header>
+  <!-- Menú principal  -->
+  <nav class="section white z-depth-0" role="navigation">
+    <div class="nav-wrapper container">
+      <a id="logo-container" href="{% url 'index' %}" class="brand-logo"><img height="50px" src="{% static 'img/workflow.png' %}"></a>
 
-				<form class="login100-form validate-form" method="post">
+    </div>
+  </nav>
+  <br>
+</header>
 
-					{% csrf_token %}
-					<div class="wrap-input100 validate-input m-b-26" data-validate="Username is required">
-						<span class="label-input100">Nombre de Usuario</span>
-						{{ form.username }}
-						<span class="focus-input100"></span>
-					</div>
+<main>
 
-					<div class="wrap-input100 validate-input m-b-18" data-validate = "Password is required">
-						<span class="label-input100">Contraseña</span>
-						{{ form.password}}
-						<span class="focus-input100"></span>
-					</div>
+  <body>
 
-					<div class="flex-sb-m w-full p-b-30">
-						<div class="contact100-form-checkbox">
-							<input class="input-checkbox100" id="ckb1" type="checkbox" name="remember-me">
-							<label class="label-checkbox100" for="ckb1">
-								Recuerdame
-							</label>
-						</div>
+    <div class="container section">
+      <div class="row center">
+        <h3>Iniciar Sesión</h3>
+        <p class="blue-text text-lighten-1">Administración</p>
+        <form action="" id="login" class="col s12 l6 m8 offset-l3 offset-m2" method="post">
 
-						<div>
-							<a href="#" class="txt1">
-								Olvidaste tu Contraseña?
-							</a>
-						</div>
-					</div>
+          {% csrf_token %}
+          <div class="row">
+            <div class="input-field col s12">
+              <i class="material-icons prefix">person</i>
+              {{ form.username }}
+              <label for="usuario">Correo Electrónico</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s12">
+              <i class="material-icons prefix">keyboard_arrow_right</i>
+              {{ form.password}}
+              <label for="password">Contraseña</label>
+            </div>
+            <a href="#">¿Olvidaste tu contraseña?</a>
+          </div>
 
-					<div class="container-login100-form-btn">
-						<button type="submit" class="login100-form-btn" style="background-color: #f6755e;">
-							Ingresar
-						</button>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
-	
-<!--===============================================================================================-->
-	<script src="{% static 'core/vendor/jquery/jquery-3.2.1.min.js' %}"></script>
-<!--===============================================================================================-->
-	<script src="{% static 'core/vendor/animsition/js/animsition.min.js' %}"></script>
-<!--===============================================================================================-->
-	<script src="{% static 'core/vendor/bootstrap/js/popper.js' %}"></script>
-	<script src="{% static 'core/vendor/bootstrap/js/bootstrap.min.js' %}"></script>
-<!--===============================================================================================-->
-	<script src="{% static 'core/vendor/select2/select2.min.js' %}"></script>
-<!--===============================================================================================-->
-	<script src="{% static 'core/vendor/daterangepicker/moment.min.js' %}"></script>
-	<script src="{% static 'core/vendor/daterangepicker/daterangepicker.js' %}"></script>
-<!--===============================================================================================-->
-	<script src="{% static 'core/vendor/countdowntime/countdowntime.js' %}"></script>
-<!--===============================================================================================-->
-	<script src="{% static 'core/js/main.js' %}"></script>
+          <div class="row">
+            <div class="col s12">
+              <button class="btn-large waves-effect waves-light blue lighten-1" type="submit" name="action">Iniciar
+                sesión
+                <i class="material-icons right">send</i>
+              </button>
+            </div>
+          </div>
+
+        </form>
+      </div>
+      
+
+  </body>
+</main>
+
+<footer class="page-footer blue">
+  <div class="container">
+    <div class="row">
+      <div class="col l6 s12">
+
+        <div class="left">
+          Desarrollado por <a class="blue-text text-lighten-3" href="http://www.workflow.cl">Workflow</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<!--  Scripts-->
+<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script src="{% static 'js/materialize.js' %}"></script>
+<script src="{% static 'js/init.js' %}"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var elems = document.querySelectorAll('.sidenav');
+    var instances = M.Sidenav.init(elems, options);
+  });
+</script>
+
+<script>
+
+  $(document).ready(function () {
+    M.updateTextFields();
+  });
+</script>
 
 </body>
+
 </html>

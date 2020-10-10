@@ -1,5 +1,7 @@
 from django.contrib.auth.views import LoginView
 
+
+
 class LoginFormView(LoginView):
     template_name = 'login.html'
 
@@ -8,3 +10,4 @@ class LoginFormView(LoginView):
         context['title'] = 'Iniciar Sesión'
         return context
 # Create your views here.
+

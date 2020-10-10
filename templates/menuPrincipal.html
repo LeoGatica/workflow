@@ -1,0 +1,145 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0" />
+  <title>Workflow</title>
+
+  <!-- CSS  -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <link href="{% static 'css/style_wf.css' %}" type="text/css" rel="stylesheet" media="screen,projection" />
+</head>
+
+<header>
+  <!-- Menú principal  -->
+  <nav>
+    <div class="nav-wrapper blue lighten-1 ">
+      <ul class="right hide-on-med-and-down">
+        <li><a href="#"><i class="material-icons">search</i></a></li>
+        <li><a href="#"><i class="material-icons">view_module</i></a></li>
+        <li><a href="#"><i class="material-icons">more_vert</i></a></li>
+      </ul>
+    </div>
+  </nav>
+
+<!-- Menú Lateral -->
+
+<ul id="slide-out" class="sidenav sidenav-fixed">
+  <li>
+    <div class="user-view blue-grey darken-4">
+      <img src="{% static 'img/WorkFlow_w.png' %}" alt="">
+      <a href="#user"><img class="circle" src="{% static 'img/user.jpg' %}"></a>
+      
+      <a href="#email"><span class="white-text email">{{ user.correo }}</span></a>
+      <a href="#email"><span class="white-text email">{{ user.nombres }} {{ user.apellidos }}</span></a>
+     
+    </div>
+  </li>
+
+  <li><a class="waves-effect blue-text text-lighten-1"><i class="material-icons"></i>Administrador</a></li>
+  <li>
+    <div class="divider"></div>
+  </li>
+
+  <li class="no-padding">
+    <ul class="collapsible collapsible-accordion">
+      <li>
+        <a class="collapsible-header">Gestión de Usuarios<i class="material-icons">arrow_drop_down</i></a>
+        <div class="collapsible-body">
+          <ul>
+            <li><a class="waves-effect" href="dashboard_agregar.html"><i class="material-icons">add</i>Agregar</a></li>
+            <li><a class="waves-effect" href="dashboard_listar.html"><i class="material-icons">dehaze</i>Listar</a></li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <a class="collapsible-header">Gestión de Empresas<i class="material-icons">arrow_drop_down</i></a>
+        <div class="collapsible-body">
+          <ul>
+            <li><a class="waves-effect" href="{% url 'empresa' %}"><i class="material-icons">add</i>Agregar</a></li>
+            <li><a class="waves-effect" href="{% url 'lista_empresa' %}"><i class="material-icons">dehaze</i>Listar</a></li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <a class="collapsible-header">Gestión de Unidades<i class="material-icons">arrow_drop_down</i></a>
+        <div class="collapsible-body">
+          <ul>
+            <li><a class="waves-effect" href="dashboard_agregar.html"><i class="material-icons">add</i>Agregar</a></li>
+            <li><a class="waves-effect" href="dashboard_listar.html"><i class="material-icons">dehaze</i>Listar</a></li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <a class="collapsible-header">Gestión de Roles<i class="material-icons">arrow_drop_down</i></a>
+        <div class="collapsible-body">
+          <ul>
+            <li><a class="waves-effect" href="dashboard_agregar.html"><i class="material-icons">add</i>Agregar</a></li>           
+            <li><a class="waves-effect" href="dashboard_listar.html"><i class="material-icons">dehaze</i>Listar</a></li>
+          </ul>
+        </div>
+      </li>
+
+    </ul>
+    
+  </li>
+</ul>
+</header>
+
+</header>
+
+<main>
+
+  <body>
+    <div class="container">
+
+      {% block content %}
+      {% endblock %}
+
+    </div>
+
+  </body>
+
+</main>
+<!-- Footer -->
+<footer class="page-footer blue">
+  <div class="container">
+    <div class="row">
+      <div class="col l6 s12">
+
+        <div class="left">
+          Desarrollado por <a class="blue-text text-lighten-3" href="http://www.workflow.cl">Workflow</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+
+<!--  Scripts-->
+<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script src="{% static 'js/materialize.js' %}"></script>
+<script src="{% static 'js/init.js' %}"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var elems = document.querySelectorAll('.sidenav');
+    var instances = M.Sidenav.init(elems);
+  });
+
+  // Initialize collapsible (uncomment the lines below if you use the dropdown variation)
+  var collapsibleElem = document.querySelector('.collapsible');
+  var collapsibleInstance = M.Collapsible.init(collapsibleElem);
+</script>
+
+<script>
+  $('.dropdown-trigger').dropdown();
+</script>
+
+</body>
+
+</html>

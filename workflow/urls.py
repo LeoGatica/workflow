@@ -18,7 +18,7 @@ from django.urls import path, include
 from core.login.views import LoginFormView
 
 urlpatterns = [
-    path('login/', LoginFormView.as_view()),
+    path('login/', LoginFormView.as_view(), name="login"),
     path('admin/', admin.site.urls),
     path('', include('core.mainwork.urls')),
     path('mainwork/', include('core.mainwork.urls')),

@@ -1,0 +1,74 @@
+{% extends 'menuPrincipal.html' %}
+
+{% block content %}
+<div class="container">
+
+    <h4 class="center">Agregar Nueva Empresa</h4>
+    <!-- Formulario de ingreso -->
+    <div class="row">
+      <form class="col s12" action="" method="POST">
+        {% csrf_token  %}
+        <div class="row">
+            <div class="input-field col s6">
+                <label for="">Run</label>
+               <input type="text" name="rut" id="rut">
+              </div>
+
+        </div>
+        
+
+        <div class="row">
+        
+       
+          <div class="input-field col s6">
+            <i class="material-icons prefix">account_circle</i>
+            <input id="nombre" type="text" class="validate" name="nombre">
+            <label for="nombre">Nombre</label>
+          </div>
+          <div class="input-field col s6">
+            <i class="material-icons prefix">account_circle</i>
+            <input id="rubro" type="text" class="validate" name="rubro">
+            <label for="rubro">Rubro</label>
+          </div>
+         
+         
+        </div>
+        <div class="input-field col l6 s12">
+            <i class="material-icons prefix">phone_android</i>
+            <input id="telefono" type="tel" class="validate" name="telefono">
+            <label for="telefono">Telefono</label>
+          </div>
+        <div class="row">
+          <div class="input-field col l12 s12">
+            <i class="material-icons prefix">location_on</i>
+            <input id="direccion" type="text" class="validate" name="direccion">
+            <label for="direccion">Dirección</label>
+          </div>
+        </div>
+        <div class="row">
+
+          
+          
+          <div class="row">
+           
+            
+          </div>
+          <div class="row">
+            <div class="col s12 l12 center">
+              <button class="btn-large waves-effect waves-light  blue lighten-1" type="submit" name="action" value="Guardar">Agregar Empresa
+                <i class="material-icons right">send</i>
+              </button>
+            </div>
+          </div>
+
+      </form>
+    </div>
+
+
+
+
+  </div>
+
+
+{% endblock %}
+    
