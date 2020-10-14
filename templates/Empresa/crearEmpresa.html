@@ -10,7 +10,8 @@
         {% csrf_token  %}
         <div class="row">
             <div class="input-field col s6">
-                <label for="">Run</label>
+              <i class="material-icons prefix">border_color</i>
+              <label for="">Rut</label>
                <input type="text" name="rut" id="rut">
               </div>
 
@@ -25,19 +26,47 @@
             <input id="nombre" type="text" class="validate" name="nombre">
             <label for="nombre">Nombre</label>
           </div>
-          <div class="input-field col s6">
-            <i class="material-icons prefix">account_circle</i>
-            <input id="rubro" type="text" class="validate" name="rubro">
-            <label for="rubro">Rubro</label>
-          </div>
          
          
         </div>
-        <div class="input-field col l6 s12">
-            <i class="material-icons prefix">phone_android</i>
-            <input id="telefono" type="tel" class="validate" name="telefono">
-            <label for="telefono">Telefono</label>
+
+        <div class="row">
+          <div class="input-field col s6">
+            <i class="material-icons prefix">border_color</i>
+            <input id="rubro" type="text" class="validate" name="rubro">
+            <label for="rubro">Razon Social</label>
           </div>
+
+        </div>
+
+        <div class="row">
+
+          <div class="input-field col s6">  
+            <select name="region" id="region">
+              {% for r in regiones %}
+              <option value="{{ r.0 }}">{{ r.1 }}</option>
+              {% endfor %}
+            </select>
+            <label>Seleccione Región</label>
+          </div>
+
+          <div class="input-field col s6">  
+
+            <select name="comuna" id="comuna">
+              {% for c in comunas %}
+              <option value="{{ c.0 }}">{{ c.1 }}</option>
+              {% endfor %}
+            </select>
+            <label>Seleccione Comuna</label>
+          </div>
+          
+
+        </div>
+
+        <div class="row">
+          
+        </div>
+
         <div class="row">
           <div class="input-field col l12 s12">
             <i class="material-icons prefix">location_on</i>
@@ -45,14 +74,34 @@
             <label for="direccion">Dirección</label>
           </div>
         </div>
+
+        <div class="row">
+           
+        <div class="input-field col l6 s12">
+          <i class="material-icons prefix">phone_android</i>
+          <input id="telefono" type="tel" class="validate" name="telefono">
+          <label for="telefono">Telefono</label>
+        </div>
+            
+        </div>
+
+        <div class="row">
+           
+          <div class="input-field col l6 s12">
+            <i class="material-icons prefix">email</i>
+            <input id="correo" type="tel" class="validate" name="correo">
+            <label for="correo">Correo Electronico</label>
+          </div>
+              
+          </div>
+
+      
+      
         <div class="row">
 
           
           
-          <div class="row">
-           
-            
-          </div>
+         
           <div class="row">
             <div class="col s12 l12 center">
               <button class="btn-large waves-effect waves-light  blue lighten-1" type="submit" name="action" value="Guardar">Agregar Empresa

@@ -1,0 +1,19 @@
+
+    <tr>
+
+      <th>Proceso</th>
+      <th>Tarea</th>
+      <th>descripcion</th>
+      <th>duracion</th>
+    </tr>
+
+    {% for i in procesos_tarea  %}
+    <tr>
+      <td>{{ i.0 }}</td>
+      <td>{{ i.1 }}</td>
+      <td>{{ i.2 }}</td>
+      <td>{{ i.3 }}</td>
+
+    </tr>
+
+    {% endfor %}
