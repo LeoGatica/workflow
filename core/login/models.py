@@ -1,16 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
-from core.mainwork.models import Cargo
-
-
-class Rol(models.Model):
-    id = models.IntegerField(primary_key=True)
-    nombre = models.CharField(max_length=50)
-    descripcion = models.CharField(max_length=100)
-    estado = models.BooleanField(('Estado'), default=True)
-
-    def __str__(self):
-        return self.nombre
+from core.mainwork.models import Rol, Cargo
          
 class ManejadorUsuario(BaseUserManager):
     def create_user(self, correo, password=None):
@@ -58,7 +48,8 @@ class Usuario(AbstractBaseUser):
     class Meta:
         verbose_name= ('usuario')
         verbose_name_plural = ('usuarios')
-
+        db_table = 'usuario'
+  
     def get_full_name(self):
         return self.nombres + ' ' + self.apellidos   
 

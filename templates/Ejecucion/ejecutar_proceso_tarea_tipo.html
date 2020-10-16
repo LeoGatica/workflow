@@ -79,7 +79,7 @@
      function cambiarUnidad(){
 
       let empresaid = document.getElementById("id_empresa").value;
-      let url = "/core/unidades/?empresa_id="+empresaid;
+      let url = "/ejecucion/unidades/?empresa_id="+empresaid;
       fetch(url)
       .then(function(result){
          return result.text();
@@ -94,7 +94,7 @@
   function unidadProceso(){
 
    let unidadid = document.getElementById("unidadId").value;
-   let url = "/core/procesos_tipo/?unidadId="+unidadid;
+   let url = "/ejecucion/procesos_tipo/?unidadId="+unidadid;
    fetch(url)
    .then(function(result){
       return result.text();
@@ -109,7 +109,7 @@
   function procesotareas(){
 
   let procesoid = document.getElementById("id_proceso").value;
-  let url = "/core/procesos_tarea/?procesoid="+procesoid;
+  let url = "/ejecucion/procesos_tarea/?procesoid="+procesoid;
   fetch(url)
   .then(function(result){
     return result.text();

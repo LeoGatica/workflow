@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import index, logged_in, usuarios, empresa, empresas, proceso, tarea, unidad, unidades, procesos
+from .views import index, logged_in, usuarios, empresa, empresas, proceso, tarea, unidad, unidades
 
 
 urlpatterns = [
@@ -11,8 +11,8 @@ urlpatterns = [
     path('proceso/', proceso, name="proceso"),
     path('tareas/', tarea, name="tarea"),
     path('listaempresa/', empresas, name="lista_empresa"),
-    path('listaunidades/', unidades, name="lista_unidad"),
-    path('listaprocesos/',procesos, name="lista_procesos")
+    path('listaunidades/', unidades, name="lista_unidad")
+   
 
 
     

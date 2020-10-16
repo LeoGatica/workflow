@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'core.mainwork',
     'core.login',
-    'core.core'
+    'core.ejecucion'
 
 
 ]
@@ -81,9 +81,9 @@ WSGI_APPLICATION = 'workflow.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.oracle',
-        'NAME': '127.0.0.1:1521/orcl',
-        'USER': 'c##worker',
-        'PASSWORD': 'oracle',
+        'NAME': 'yagami.noip.me:1521/orcl',
+        'USER': 'workflow',
+        'PASSWORD': 'k57NSqMfUsBd3kooL5tN',
         'TEST': {
             'USER': 'default_test',
             'TBLSPACE': 'default_test_tbls',

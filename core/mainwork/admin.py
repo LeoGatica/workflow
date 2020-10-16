@@ -1,8 +1,8 @@
 from django.contrib import admin
-from .models import Cliente, Cargo, Region, Comuna, Empresa, Unidad, ProcesoTipo, TareaTipo
+from .models import Cargo, Region, Comuna, Empresa, Unidad, ProcesoTipo, TareaTipo
 
 # Register your models here.
-admin.site.register(Cliente)
+
 admin.site.register(Cargo)
 admin.site.register(Empresa)
 admin.site.register(Unidad)
