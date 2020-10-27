@@ -1,130 +1,112 @@
+{% extends 'menuPrincipal.html' %}
 
 {% load static %}
 {% block content %}
 
+<div class="container-fluid">
+  <div class="row">
+    <h3>Ejecutar Proceso</h3>
+  </div>
 
-<div class="container">
-  <h1>Gestion de clientes</h1>
-
-  <h2>EJECUTAR PROCESO</h2>
   <form action="" method="POST">
     {% csrf_token  %}
-    <label for="empresa">Empresas</label>
-      <select name="empresa" id="id_empresa" onchange="cambiarUnidad()">
-        <option value="">Seleccionar</option>
-        {% for e in empresas %}
-      <option value="{{ e.0 }}">{{ e.2 }}</option>
-        {% endfor %} 
-       </select>
-       <br>
-       <label for="unidades">Unidades</label>
+    <div class="form-row align-items-center">
 
-       <select name="unidad" id="unidadId" onchange="unidadProceso()">
-        
-       </select>
-       <br>
-       <label for="id_proceso">Procesos</label>
-       <select name="id_proceso" id="id_proceso" onchange="procesotareas()">
-       </select>
+      <!-- Selector de Empresas -->
+      <div class="col-sm my-1">
+        <label class="mr-sm-2" for="id_empresa">Empresa</label>
+        <select class="custom-select mr-sm-2" name="empresa" id="id_empresa" onchange="cambiarUnidad()">
+          <option selected>Seleccione Empresa...</option>
+          {% for e in empresas %}
+          <option value="{{ e.0 }}">{{ e.2 }}</option>
+          {% endfor %}
+        </select>
+      </div>
 
-    <input type="submit" value="Ejecutar">
+      <!-- Selector de unidades -->
+      <div class="col-sm my-1">
+        <label class="mr-sm-2" for="unidadId">Unidad</label>
+        <select class="custom-select mr-sm-2" name="unidad" id="unidadId" onchange="unidadProceso()">
+          <option selected>Seleccione Unidad...</option>
+        </select>
+      </div>
+
+      <!-- Selector de Procesos -->
+      <div class="col-sm my-1">
+        <label class="mr-sm-2" for="id_proceso">Procesos</label>
+        <select class="custom-select mr-sm-2" name="id_proceso" id="id_proceso" onchange="procesotareas()">
+          <option selected>Seleccione Unidad...</option>
+        </select>
+      </div>
+
+      <!-- Selector de Fecha de Ejecución -->
+      <div class="col-sm my-1">
+        <label for="fecha">Fecha de ejecución</label>
+        <input class="form-control" type="date" value="" id="fecha">
+      </div>
+
+      <!-- Carga la tabla con las tareas del proceso seleccionado -->
+      <div class="col-12 my-1">
+        <!-- Carga las tareas del proceso selecionado -->
+        <div class="h5">Detalle de las Tareas del Proceso</div>
+        <div class="table-responsive">
+          <table class="table table-striped table-sm" name="tareasid" id="tareasid">
+            <!-- Carga de tareas -->
+          </table>
+        </div>
+      </div>
+
+      <!-- Boton ejecutar proceso -->
+      <div class="col-auto my-1">
+        <button type="submit" class="btn btn-primary">Ejecutar Proceso</button>
+      </div>
+    </div>
   </form>
 
 </div>
 
-<div class="container">
-  <table name="tareasid" id="tareasid">
-
-  </table>
-</div>
-
-<div class="container">
-
-  <h4 class="center">Lista de procesos</h4>
-
-  <table>
-    <tr>
-
-      <th>EMPRESA</th>
-      <th>UNIDAD</th>
-      <th>FECHA EJECUCION</th>
-      <th>Fecha TERMINO</th>
-      <th>PROCESO</th>
-      <th>TAREA</th>
-    </tr>
-
-    {% for p in procesos %}
-    <tr>
-      <td>{{ p.0 }}</td>
-      <td>{{ p.1 }}</td>
-      <td>{{ p.2 }}</td>
-      <td>{{ p.3 }}</td>
-      <td>{{ p.4 }}</td>
-      <td>{{ p.5 }}</td>
-
-    </tr>
-
-    {% endfor %}
-
-
-
-    {% endblock %}
-
-  </table>
-
-      
-
-
-  <script>
-     function cambiarUnidad(){
-
-      let empresaid = document.getElementById("id_empresa").value;
-      let url = "/ejecucion/unidades/?empresa_id="+empresaid;
-      fetch(url)
-      .then(function(result){
-         return result.text();
-      })
-      .then(function(result){
-          document.getElementById("unidadId").innerHTML = result;
-      });
-     }
-  </script>
-
 <script>
-  function unidadProceso(){
+  function cambiarUnidad() {
 
-   let unidadid = document.getElementById("unidadId").value;
-   let url = "/ejecucion/procesos_tipo/?unidadId="+unidadid;
-   fetch(url)
-   .then(function(result){
-      return result.text();
-   })
-   .then(function(result){
-       document.getElementById("id_proceso").innerHTML = result;
-   });
+    let empresaid = document.getElementById("id_empresa").value;
+    let url = "/ejecucion/unidades/?empresa_id=" + empresaid;
+    fetch(url)
+      .then(function (result) {
+        return result.text();
+      })
+      .then(function (result) {
+        document.getElementById("unidadId").innerHTML = result;
+      });
   }
 </script>
 
 <script>
-  function procesotareas(){
+  function unidadProceso() {
 
-  let procesoid = document.getElementById("id_proceso").value;
-  let url = "/ejecucion/procesos_tarea/?procesoid="+procesoid;
-  fetch(url)
-  .then(function(result){
-    return result.text();
-  })
-    .then(function(result){
-    document.getElementById("tareasid").innerHTML = result;
-});
-}
-  
+    let unidadid = document.getElementById("unidadId").value;
+    let url = "/ejecucion/procesos_tipo/?unidadId=" + unidadid;
+    fetch(url)
+      .then(function (result) {
+        return result.text();
+      })
+      .then(function (result) {
+        document.getElementById("id_proceso").innerHTML = result;
+      });
+  }
 </script>
 
+<script>
+  function procesotareas() {
+    let procesoid = document.getElementById("id_proceso").value;
+    let url = "/ejecucion/procesos_tarea/?procesoid=" + procesoid;
+    fetch(url)
+      .then(function (result) {
+        return result.text();
+      })
+      .then(function (result) {
+        document.getElementById("tareasid").innerHTML = result;
+      });
+  }
+</script>
 
-  </body>
-
-
-  </body>
-
-</html>
+{% endblock %}

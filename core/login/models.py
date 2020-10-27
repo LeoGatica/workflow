@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
-from core.mainwork.models import Rol, Cargo
+from core.mainwork.models import Rol, Cargo, Empresa, Unidad
          
 class ManejadorUsuario(BaseUserManager):
     def create_user(self, correo, password=None):
@@ -27,13 +27,15 @@ class ManejadorUsuario(BaseUserManager):
             return usuario
 
 class Usuario(AbstractBaseUser):
-    rut = models.CharField(max_length=15)
+    rut = models.CharField(max_length=10)
     nombres = models.CharField(max_length=50)
     apellidos = models.CharField(max_length=50)
     telefono =  models.IntegerField()
     direccion =  models.CharField(max_length=50)
     correo = models.EmailField(verbose_name='correo electronico', max_length=100, unique=True)
-    cargo = models.ForeignKey(Cargo, on_delete=models.CASCADE)
+    empresa = models.ForeignKey(Empresa, on_delete=models.CASCADE ,blank=True, null = True)
+    unidad = models.ForeignKey(Unidad, on_delete=models.CASCADE, blank=True, null = True)
+    cargo = models.ForeignKey(Cargo, on_delete=models.CASCADE, blank=True, null = True)
     rol = models.ForeignKey(Rol, on_delete=models.CASCADE)
     
     activo = models.BooleanField(('Activo'), default=True)

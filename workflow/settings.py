@@ -25,7 +25,7 @@ SECRET_KEY = '$i2db-b_l_m7%c=ju$p0)e507%%d-0ube*z+il5tj%-0+*57o)'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['yagami.noip.me','wf.yagami.cl','workflow.localdomain', '192.168.1.60', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'core.mainwork',
     'core.login',
     'core.ejecucion',
-    'core.cliente'
+    'core.cliente',
+    'crispy_forms'
 
 
 ]
@@ -119,9 +120,9 @@ AUTH_USER_MODEL = 'login.Usuario'
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es-cl'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Santiago'
 
 USE_I18N = True
 
@@ -129,7 +130,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
@@ -141,3 +142,4 @@ STATICFILES_DIRS = [
     ]
 
 LOGIN_REDIRECT_URL = '/mainwork/logged_in'
+LOGOUT_REDIRECT_URL = 'login'

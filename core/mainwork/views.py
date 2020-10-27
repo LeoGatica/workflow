@@ -1,6 +1,9 @@
 from django.shortcuts import render, redirect
 from django.db import connection
 import cx_Oracle
+from django.contrib import messages
+from .models import *
+from django.contrib.auth import logout
 
 # Create your views here.
 def index(request):
@@ -10,6 +13,7 @@ def index(request):
 def logged_in(request):
 
 	return render(request, 'menuPrincipal.html')
+
 
 
 def empresas(request):
@@ -87,19 +91,16 @@ def unidad(request):
         empresa = request.POST.get('empresa')
         estado = '1'
 
-        print(nombre)
-        print(descripcion)
-        print(empresa)
-        print(estado)
-        
         salida = agregar_unidad(nombre, descripcion, estado, empresa)
 
         print(salida)
         if salida == 1:
             data['mensaje'] = 'Agregado correctamente'
+            messages.success(request, 'Servicio editado correctamente')
                                
         else:
             data['mensaje'] = 'No se pudo agregar'
+            messages.success(request, 'Servicio NO editado correctamente')
 
     return render(request, 'Unidades/crearUnidad.html', data)
     
@@ -108,7 +109,7 @@ def unidades(request):
 
     data = {
         
-        'unidades':listar_unidades()
+        'unidades':listar_unidades_empresa()
         
     }
     
@@ -139,10 +140,10 @@ def empresa(request):
         salida = agregar_empresa(rut, nombre, rubro, comuna, direccion, telefono, correo, estado)
         
         if salida == 1:
-            data['mensaje'] = 'Agregado correctamente'
-                               
+            messages.success(request, 'Empresa creada correctamente')
+                                 
         else:
-            data['mensaje'] = 'No se pudo agregar'
+            messages.success(request, 'Empresa no creada ')
       
     return render(request, 'Empresa/crearEmpresa.html', data)
 	
@@ -183,6 +184,56 @@ def listar_empresas():
 
     return lista 
 
+def editarEmpresa(request, idempresa):
+    
+    
+
+    if request.method == 'GET':
+        regiones = listar_regiones()  
+        empresa = Empresa.objects.get(idempresa = idempresa)
+        comuna = Comuna.objects.get(nombre_comuna = empresa.comuna_idcomuna)
+        region = Region.objects.get(nombre = comuna.id_region)
+    else:
+        rut = request.POST.get('rut')
+        nombre =  request.POST.get('nombre')
+        rubro =  request.POST.get('rubro')
+        comuna = request.POST.get('comuna')
+        direccion = request.POST.get('direccion')
+        correo = request.POST.get('correo')
+        telefono = request.POST.get('telefono')
+
+        salida = editar_empresa(idempresa, rut, nombre, rubro, comuna, direccion, telefono, correo)
+        
+        if salida == 1:
+            messages.success(request, 'Empresa Modificada Correctamente')
+                                 
+        else:
+            messages.success(request, 'Empresa no Modificada ')
+            
+        return redirect('lista_empresa')
+        
+              
+ 
+
+    return render(request,'Empresa/crearEmpresa.html', {'empresa':empresa,'comuna':comuna, 'regiones':regiones,  'region':region } )      
+
+def deshabilitarEmpresa(request, idempresa):
+ 
+    empresa = Empresa.objects.get(idempresa = idempresa)
+ 
+    if request.method =='POST':
+
+        salida = deshabilitar_empresa(idempresa)
+        
+        if salida == 1:
+            messages.success(request, 'Empresa deshabilitada correctamente')
+                                 
+        else:
+            messages.success(request, 'Empresa no deshabilitada ')
+
+        return redirect('lista_empresa')
+    return render (request, 'Empresa/eliminarEmpresa.html', {'empresa':empresa})    
+
 def listar_unidades():
     django_cursor = connection.cursor()
     cursor = django_cursor.connection.cursor()
@@ -195,6 +246,19 @@ def listar_unidades():
         lista.append(fila)
 
     return lista  
+
+def listar_unidades_empresa():
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    out_cursor = django_cursor.connection.cursor()
+
+    cursor.callproc('sp_listar_unidades_empresa', [out_cursor])
+
+    lista = []
+    for fila in out_cursor:
+        lista.append(fila)
+
+    return lista      
 
 def listar_procesostipo():
     django_cursor = connection.cursor()
@@ -235,6 +299,28 @@ def listar_regiones():
 
     return lista   
 
+def listar_comuna_region(regionid):
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    out_cursor = django_cursor.connection.cursor()
+
+    cursor.callproc('sp_listar_comunas_region', [out_cursor, regionid])
+
+    lista = []
+    for fila in out_cursor:
+        lista.append(fila)
+
+    return lista      
+
+def regiones_comunas(request):
+    regionid = request.GET.get('region_id')
+ 
+    data = {
+           'region_comuna':listar_comuna_region(regionid)
+        }   
+     
+    return render(request, 'Empresa/regiones_comuna.html',data)    
+
 def listar_comunas():
     django_cursor = connection.cursor()
     cursor = django_cursor.connection.cursor()
@@ -255,8 +341,25 @@ def agregar_empresa(rut, nombre, rubro, comuna, direccion, telefono, correo, est
     cursor = django_cursor.connection.cursor()
     salida = cursor.var(cx_Oracle.NUMBER)
     cursor.callproc('sp_agregar_empresa',[rut, nombre, rubro, comuna, direccion, telefono, correo, estado, salida])
-    print(salida)
+    
     return salida.getvalue()
+
+def editar_empresa(idempresa, rut, nombre, rubro, comuna, direccion, telefono, correo):
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    salida = cursor.var(cx_Oracle.NUMBER)
+    cursor.callproc('sp_editar_empresa',[idempresa, rut, nombre, rubro, comuna, direccion, telefono, correo, salida])
+    
+    return salida.getvalue()
+
+def deshabilitar_empresa(id):
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    salida = cursor.var(cx_Oracle.NUMBER)
+    cursor.callproc('sp_deshabilitar_empresa',[id, salida])
+    
+    return salida.getvalue()
+
 
 
 def agregar_procesotipo(nombre, descripcion, unidad):
@@ -271,6 +374,7 @@ def agregar_unidad(nombre, descripcion, estado, empresa):
     cursor = django_cursor.connection.cursor()
     salida = cursor.var(cx_Oracle.NUMBER)
     cursor.callproc('sp_agregar_unidad',[nombre, descripcion, estado, empresa, salida])
+
     return salida.getvalue()
 
 
@@ -279,7 +383,31 @@ def agregar_tareatipo(nombre, descripcion, dias, cargo, procesotipo):
     cursor = django_cursor.connection.cursor()
     salida = cursor.var(cx_Oracle.NUMBER)
     cursor.callproc('sp_agregar_tareatipo',[nombre, descripcion, dias, cargo, procesotipo, salida])
-    return salida.getvalue()    
+    return salida.getvalue()   
+
+def unidades_cargos(request):
+    
+    unidad_id =request.GET.get('unidad')
+    data = {
+           'cargos':listar_unidades_cargos(unidad_id)
+        }  
+        
+    return render(request, 'Ejecucion/unidades_cargos.html',data)    
+
+
+def listar_unidades_cargos(unidad_id):
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    out_cursor = django_cursor.connection.cursor()
+
+
+    cursor.callproc('SP_LISTAR_UNIDADES_CARGOS',[out_cursor, unidad_id])
+   
+    lista = []
+    for fila in out_cursor:
+        lista.append(fila)
+
+    return lista     
 
 
 

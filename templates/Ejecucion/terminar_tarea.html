@@ -1,0 +1,140 @@
+{% extends 'menuPrincipal.html' %}
+
+{% load static %}
+{% block content %}
+
+
+<div class="container">
+  <h1>Terminar tarea</h1>
+
+  <h2>EJECUTAR PROCESO</h2>
+    <label for="empresa">Empresas</label>
+      <select name="empresa" id="id_empresa" onchange="cambiarUnidad()">
+        <option value="">Seleccionar Empresa...</option>
+        {% for e in empresas %}
+      <option value="{{ e.0 }}">{{ e.2 }}</option>
+        {% endfor %} 
+       </select>
+       <br>
+       <label for="unidades">Unidades</label>
+
+       <select name="unidad" id="unidadId" onchange="unidadProceso()">
+        
+       </select>
+       <br>
+       <label for="id_proceso">Procesos</label>
+       <select name="id_proceso" id="id_proceso" onchange="procesotareas()">
+       </select>
+
+    <!-- Form terminar tarea -->
+
+    <div class="container">
+        <form action="" method="POST">
+          {% csrf_token  %}
+          <input type="button" name="procesos" value="Procesos ejecutados" onclick="procesoEjecutado()">
+          <h4 class="center">Terminar tarea</h4>
+        
+          <label for="procesos_e">Procesos ejecutados</label>
+          <select name="procesos_e" id="procesos_e" onchange="tareaejecutada()">
+          </select>
+          <br>
+          <label for="tareas_e">Tareas</label>
+          <br>
+               <select name="tareas_e" id="tareas_e">
+          </select>
+          <input  type="submit" value="Terminar tarea">
+            
+      </form>
+      </div>
+    
+  </form>
+
+</div>
+
+
+
+
+<!-- Scripts select anidados -->
+  <script>
+     function cambiarUnidad(){
+
+      let empresaid = document.getElementById("id_empresa").value;
+      let url = "/ejecucion/unidades/?empresa_id="+empresaid;
+      fetch(url)
+      .then(function(result){
+         return result.text();
+      })
+      .then(function(result){
+          document.getElementById("unidadId").innerHTML = result;
+      });
+     }
+  </script>
+
+<script>
+  function unidadProceso(){
+
+   let unidadid = document.getElementById("unidadId").value;
+   let url = "/ejecucion/procesos_tipo/?unidadId="+unidadid;
+   fetch(url)
+   .then(function(result){
+      return result.text();
+   })
+   .then(function(result){
+       document.getElementById("id_proceso").innerHTML = result;
+   });
+  }
+</script>
+
+<script>
+  function procesotareas(){
+
+  let procesoid = document.getElementById("id_proceso").value;
+  let url = "/ejecucion/procesos_tarea/?procesoid="+procesoid;
+  fetch(url)
+  .then(function(result){
+    return result.text();
+  })
+    .then(function(result){
+    document.getElementById("tareasid").innerHTML = result;
+});
+}
+</script>
+
+<script>
+  function procesoEjecutado(){
+
+      let unidadid = document.getElementById("unidadId").value;
+      let url = "/ejecucion/procesos_ejecutados/?unidadid="+unidadid;
+      fetch(url)
+      .then(function(result){
+        return result.text();
+        })
+       .then(function(result){
+       document.getElementById("procesos_e").innerHTML = result;
+       });
+  
+}
+</script>
+
+
+<script>
+  function tareaejecutada(){
+      let proceso_e = document.getElementById("procesos_e").value;
+      let url = "/ejecucion/procesos_tarea_ejecutada/?procesos_e="+proceso_e;
+      fetch(url)
+      .then(function(result){
+        return result.text();
+        })
+       .then(function(result){
+       document.getElementById("tareas_e").innerHTML = result;
+       });
+}
+</script>
+
+  </body>
+
+
+  </body>
+
+</html>
+{% endblock %}
