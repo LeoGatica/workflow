@@ -141,5 +141,5 @@ STATICFILES_DIRS = [
         os.path.join(BASE_DIR, 'static'),
     ]
 
-LOGIN_REDIRECT_URL = '/mainwork/logged_in'
+LOGIN_REDIRECT_URL = '/mainwork/menuPrincipal'
 LOGOUT_REDIRECT_URL = 'login'

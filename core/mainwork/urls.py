@@ -7,6 +7,7 @@ from core.login.views import *
 urlpatterns = [
     path('', index, name="index"),
     path('logged_in/', logged_in),
+    path('menuPrincipal/', menuPrincipal, name="menuPrincipal"),
     path("logout/", logout_request, name="logout"),
     path('usuarios/', usuarios, name="lista_usuarios"),
     path('empresa/', empresa, name="empresa"),

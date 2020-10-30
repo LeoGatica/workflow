@@ -80,6 +80,24 @@
                   
                   <div>{{ user.nombres }} {{ user.apellidos }}</div>
                   <div>{{ user.correo }}</div>
+                  <div>{{ request.session.EmpresaUsuario }}</div>
+
+                  {% if user.rol_id == 3 %}
+                  
+                  <div>{{ request.session.UnidadUsuario }}</div>
+                  <div>{{ request.session.CargoUsuario }}</div>
+                  {% endif %}
+                  {% if user.rol_id == 4 %}
+                  
+                  <div>{{ request.session.UnidadUsuario }}</div>
+                  <div>{{ request.session.CargoUsuario }}</div>
+                  {% endif %}
+                  {% if user.rol_id == 5 %}
+                  
+                  <div>{{ request.session.UnidadUsuario }}</div>
+                  <div>{{ request.session.CargoUsuario }}</div>
+                  {% endif %}
+                  <br>
                   <div class="text-info font-weight-bold">{% if user.rol_id == 1 %} Administrador {% endif %}</div>
                   <div class="text-info font-weight-bold">{% if user.rol_id == 2 %} Diseñador {% endif %}</div>
                   <div class="text-primary font-weight-bold">{% if user.rol_id == 3 %} Gerente {% endif %}</div>
@@ -279,6 +297,9 @@
           $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
         });
       });
+
+     
+
 
     
     });

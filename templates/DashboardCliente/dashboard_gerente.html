@@ -1,121 +1,137 @@
 {% extends 'menuPrincipal.html' %}
 {% block content %}
 <div class="container">
+  
+  <h5>  {{ request.session.EmpresaUsuario }} </h5>
+  <h5> Unidades </h5>
   <div class="row">
     <div class="col-sm-12">
-      <h5> Lista de procesos ejecutados </h5>
-      <table class="responsive-table highlight">
-        <tr>
-          <th>Cantidad de procesos</th>
-          <th>nombre</th>
-          <th>descripcion</th>
-          <th>fecha ejecucion</th>
-          <th>fecha termino</th>
-          <th>proceso tipo</th>
-        </tr>
-        {% for pe in procesos %}
-        <tr>
-          <td class="vl1">{{pe.0}}</td>
-          <!--aqui deberia ir un incrementador para entregar el id -->
-          <td>{{pe.1}}</td>
-          <td>{{pe.2}}</td>
-          <td>{{pe.3}}</td>
-          <td>{{pe.4}}</td>
-          <td>{{pe.5}}</td>
-        </tr>
-        {% endfor %}
-      </table>
 
+
+      
+      <table class="table table-striped table-sm">
+
+      
+        <tbody id="tabla">
+          {% for item in unidades %}
+          <tr>
+
+            <th>Unidad {{ item.nombre }}
+
+              
+               </th>
+            <td>{{ item.descripcion }}   
+
+
+              
+            {% for p in procesos %}
+                
+            
+
+              {% if item.idunidad == p.0 %}
+              <div class="col-sm-12">
+
+                <td style="background-color:#00FF00">Proceso {{p.5}} 
+                
+                
+                 
+                  {% for t in tareas %}
+                  
+                    {% if p.6 == t.2 %}
+                    <tr>
+                     
+                        <td style="background-color:#FF0000">Tarea {{t.4}}</td>
+                        <td>{{t.7}} </td>
+                        <td>{{t.5}} </td>
+                        <td>{{t.6}}</td>
+                        <td>{{t.8}}</td>
+                     
+                      
+                      </tr>
+                      
+                    {% endif %}
+                  
+  
+               
+                  
+                 
+                  {% endfor %}
+                
+                
+                
+                </td>
+
+              </div>
+              
+                   
+              
+              {% endif %}
+            </tr>
+        {% endfor %}
+            </td> 
+
+
+          </tr>
+          
+          {% endfor %}
+             
+        </tbody>
+     
+      </table>
+           
+
+
+           
+      
+      
     </div>
   </div>
+  
 
-  <div class="grafico1" id="grafico1"></div>
-
-
-  <!-- Carga del Dashboard -->
   <div class="row">
-    <div class="s12">
-      <h5 class="left teal-text darken-1"> Lista de tareas ejecutadas </h5>
-      <table class="responsive-table highlight">
-        <tr>
-          <th>Cantidad de tareas</th>
-          <th>nombre</th>
-          <th>descripcion</th>
-          <th>Estado</th>
-          <th>Semaforo</th>
-        </tr>
-        {% for tt in tareatipo %}
-        <tr>
-          <td class="vl1">{{tt.0}}</td>
-          <!--aqui deberia ir un incrementador para entregar el id -->
-          <td>{{tt.1}}</td>
-          <td>{{tt.2}}</td>
-          <td>{{tt.3}}</td>
-          <td>{{tt.4}}</td>
-        </tr>
+    <table>
+  
+      <tbody>
+        {% for ct in cantidad_tareas %}
+        <tbody class="labels">
+          
+          <tr>
+            
+            <td colspan="5">
+              <label for="accounting">Cantidad de Tareas : {{ct.0}}</label>
+              <input type="checkbox" name="accounting" id="accounting" data-toggle="toggle">
+            </td>
+          </tr>
+          
+        </tbody>
+        <tbody class="hide">
+  
+          {% for cte in cantidad_tareasEstado %}
+  
+  
+          <tr>
+            <td >{{cte.0}}</td>
+            <td >{{cte.1}}</td>
+            
+          </tr>
+          {% endfor %}
+  
+        
+        </tbody>
         {% endfor %}
-      </table>
-      <!-- Carga del Dashboard -->
-      <div class="grafico2" id="grafico2"></div>
-    </div>
+      </tbody>
+    </table>
+
   </div>
+  
+
+  
 
 
-
-
-  <div class="row">
-    <div class="col s12 m6 l4">
-      <h5 class="left teal-text darken-1"> TAREAS TERMINADAS </h5>
-      <table class="responsive-table highlight">
-        <tr>
-          <th>Cantidad</th>
-          <th>Estado</th>
-        </tr>
-        {% for t in terminadas %}
-        <tr>
-          <td class="vl1">{{t.0}}</td>
-          <!--aqui deberia ir un incrementador para entregar el id -->
-          <td>{{t.1}}</td>
-        </tr>
-        {% endfor %}
-      </table>
-    </div>
-    <div class="col s12 m6 l4">
-      <h5 class="left teal-text darken-1">TAREAS EN CURSO </h5>
-      <table class="responsive-table highlight">
-        <tr>
-          <th>Cantidad</th>
-          <th>Estado</th>
-        </tr>
-        {% for ec in en_curso %}
-        <tr>
-          <td class="vl1">{{ec.0}}</td>
-          <!--aqui deberia ir un incrementador para entregar el id -->
-          <td>{{ec.1}}</td>
-        </tr>
-        {% endfor %}
-      </table>
-    </div>
-    <div class="col s12 m6 l4">
-      <h5 class="left teal-text darken-1"> TAREAS DETENIDAS </h5>
-      <table class="responsive-table highlight">
-        <tr>
-          <th>Cantidad</th>
-          <th>Estado</th>
-        </tr>
-        {% for d in detenidas %}
-        <tr>
-          <td class="vl1">{{d.0}}</td>
-          <!--aqui deberia ir un incrementador para entregar el id -->
-          <td>{{d.1}}</td>
-        </tr>
-        {% endfor %}
-      </table>
-    </div>
-  </div>
+  
 </div>
 
-<script type="application/javascript">
+<!-- <script type="application/javascript">
   // Create the chart
   Highcharts.chart('grafico1', {
     chart: {
@@ -214,5 +230,51 @@
       ]
     }]
   });
+</script> -->
+<script>
+  $(document).ready(function() {
+	$('[data-toggle="toggle"]').change(function(){
+		$(this).parents().next('.hide').toggle();
+	});
+});
 </script>
+
+<style>
+
+table { 
+	width: 750px; 
+	border-collapse: collapse; 
+	margin:50px auto;
+	}
+
+th { 
+	background: #3498db; 
+	color: white; 
+	font-weight: bold; 
+	}
+
+td, th { 
+	padding: 10px; 
+	border: 1px solid #ccc; 
+	text-align: left; 
+	font-size: 18px;
+	}
+
+.labels tr td {
+	background-color: #2cc16a;
+	font-weight: bold;
+	color: #fff;
+}
+
+.label tr td label {
+	display: block;
+}
+
+
+[data-toggle="toggle"] {
+	display: none;
+}
+</style>
+
+
 {% endblock %}

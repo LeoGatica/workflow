@@ -4,6 +4,8 @@ import cx_Oracle
 from django.contrib import messages
 from .models import *
 from django.contrib.auth import logout
+from core.cliente.views import *
+from django.core.exceptions import ObjectDoesNotExist
 
 # Create your views here.
 def index(request):
@@ -13,6 +15,46 @@ def index(request):
 def logged_in(request):
 
 	return render(request, 'menuPrincipal.html')
+
+
+def menuPrincipal(request):
+    #Rol del Usuario (admin, diseñador, gerente, jefe, funcionario)
+    perfil = request.user.rol_id
+    empresa = Empresa.objects.get(idempresa = request.user.empresa_id)
+    request.session['EmpresaUsuario'] = empresa.nombre
+
+    try:
+        unidad = Unidad.objects.get(idunidad = request.user.unidad_id)
+        request.session['UnidadUsuario'] = unidad.nombre 
+        
+    except ObjectDoesNotExist as e:
+        unidad = None
+        request.session['UnidadUsuario'] = None
+
+    try:
+        cargo = Cargo.objects.get(idcargo = request.user.cargo_id)
+        request.session['CargoUsuario'] = cargo.nombre
+    except ObjectDoesNotExist:
+        cargo = None  
+        request.session['CargoUsuario'] = None
+
+    
+    #Si el perfil es Admin o Diseñador 
+    if perfil == 1 :
+        return redirect(procesos_Process)
+    elif perfil == 2:
+        return redirect(procesos_Process)
+    elif perfil == 3:
+        return redirect(procesos_Gerente)
+    elif perfil == 4:
+        return redirect(procesos_Jefe)
+    elif perfil == 5:
+        return redirect(procesos)
+
+
+
+      
+    return render(request, 'menuPrincipal.html')
 
 
 
@@ -191,6 +233,7 @@ def editarEmpresa(request, idempresa):
     if request.method == 'GET':
         regiones = listar_regiones()  
         empresa = Empresa.objects.get(idempresa = idempresa)
+
         comuna = Comuna.objects.get(nombre_comuna = empresa.comuna_idcomuna)
         region = Region.objects.get(nombre = comuna.id_region)
     else:
