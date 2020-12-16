@@ -5,6 +5,7 @@ from django.contrib import messages
 from .models import *
 from django.contrib.auth import logout
 from core.cliente.views import *
+from core.ejecucion.views import *
 from django.core.exceptions import ObjectDoesNotExist
 
 # Create your views here.
@@ -49,11 +50,9 @@ def menuPrincipal(request):
     elif perfil == 4:
         return redirect(procesos_Jefe)
     elif perfil == 5:
-        return redirect(procesos)
+        return redirect(procesos_Funcionario)
 
-
-
-      
+  
     return render(request, 'menuPrincipal.html')
 
 
@@ -79,26 +78,88 @@ def proceso(request):
         nombre = request.POST.get('nombre_proceso')
         descripcion =  request.POST.get('descripcion')
         unidad = request.POST.get('unidad')
+        request.session['UnidadWF'] = unidad
 
           
         salida = agregar_procesotipo(nombre, descripcion, unidad)
         if salida == 1:
-            data['mensaje'] = 'Agregado correctamente'
+            messages.success(request, 'Proceso Creado correctamente')
+            
+            try:
+                proceso = obtener_procesotipo(unidad)
+                request.session['Proceso'] = proceso
+                
+            except ObjectDoesNotExist as e:
+                proceso = None
+                request.session['Proceso'] = None
+            
             return redirect(tarea)    
                           
         else:
-            data['mensaje'] = 'No se pudo agregar'
+            messages.success(request, 'Proceso no creado')
 
     return render(request, 'Procesos/CrearProceso.html', data)
 
-
-def tarea(request):
+def cargo(request):
 
     data = {
-        'unidades':listar_unidades(),
-        'empresas':listar_empresas(),
-        'cargos':listar_cargos(),
-        'procesos':listar_procesostipo()
+
+        'unidades': listar_unidades(),
+        'empresas': listar_empresas()
+
+    }
+
+    if request.method == 'POST':
+
+        nombre = request.POST.get('nombre')
+        descripcion = request.POST.get('descripcion')
+        unidad = request.POST.get('unidad')
+        estado = '1'
+
+        salida = agregar_cargo(nombre, descripcion, estado, unidad)
+
+        print(salida)
+        if salida == 1:
+            data['mensaje'] = 'Agregado correctamente'
+            messages.success(request, 'Servicio editado correctamente')
+
+        else:
+            data['mensaje'] = 'No se pudo agregar'
+            messages.success(request, 'Servicio NO editado correctamente')
+
+    return render(request, 'Cargos/crearCargo.html', data)
+
+
+def cargos(request):
+
+    data = {
+
+        'cargos': listar_cargos()
+
+    }
+
+    return render(request, 'Cargos/listarCargo.html', data)
+
+
+def tarea(request):
+    print('ENTRE ACA')
+    unidad_id = request.session['UnidadWF']
+    procesotipo_session = request.session['Proceso']
+
+    try:
+        proceso = ProcesoTipo.objects.get(idprocesotipo = procesotipo_session)
+        request.session['NombreProceso'] = proceso.nombre
+                
+    except ObjectDoesNotExist as e:
+        proceso = None
+        request.session['NombreProceso'] = None
+
+    print(proceso)
+    data = {
+        #'unidades':listar_unidades(),
+        #'empresas':listar_empresas(),
+        'cargos':listar_unidades_cargos(unidad_id),
+        #'procesos':listar_procesostipo()
     }
     
     if request.method == 'POST':
@@ -106,15 +167,17 @@ def tarea(request):
         nombre = request.POST.get('tarea')
         descripcion =  request.POST.get('descripcionTarea')
         dias = request.POST.get('tiempo')
+        orden = request.POST.get('orden')
         cargo = request.POST.get('cargo')
-        procesotipo = request.POST.get('proceso')
+        #procesotipo = request.POST.get('proceso')
+        procesotipo = proceso.idprocesotipo
         
-        salida = agregar_tareatipo(nombre, descripcion, dias, cargo, procesotipo)
+        salida = agregar_tareatipo(nombre, descripcion, dias, orden, cargo, procesotipo)
         if salida == 1:
-            data['mensaje'] = 'Agregado correctamente'
+            messages.success(request, 'Tarea Creada Correctamente')
                                
         else:
-            data['mensaje'] = 'No se pudo agregar'
+            messages.success(request, 'Tarea No Creada')
 
     return render(request, 'Tareas/CrearTareas.html', data)
 
@@ -188,6 +251,59 @@ def empresa(request):
             messages.success(request, 'Empresa no creada ')
       
     return render(request, 'Empresa/crearEmpresa.html', data)
+
+
+
+def editarTarea(request, idtareatipo):
+    
+    if request.method == 'GET':
+        
+        tarea = TareaTipo.objects.get(idtareatipo = idtareatipo)
+        procesotipo = ProcesoTipo.objects.get(idprocesotipo = tarea.idprocesotipo.idprocesotipo)
+        request.session['NombreProceso'] = procesotipo.nombre
+        request.session['NombreTarea'] = tarea.nombre
+        request.session['DescripcionTarea'] = tarea.descripcion
+        request.session['DuracionTarea'] = tarea.duraciondias
+        request.session['OrdenTarea'] = tarea.orden_tarea
+
+        cargos= listar_unidades_cargos(procesotipo.unidad_idunidad.idunidad)
+
+    else:
+        nombre = request.POST.get('tarea')
+        descripcion =  request.POST.get('descripcionTarea')
+        dias = request.POST.get('tiempo')
+        orden = request.POST.get('orden')
+        cargo = request.POST.get('cargo')
+        #procesotipo = request.POST.get('proceso')
+        
+        tarea = TareaTipo.objects.get(idtareatipo = idtareatipo)
+        procesotipo = ProcesoTipo.objects.get(idprocesotipo = tarea.idprocesotipo.idprocesotipo)
+        idprocesotipo = procesotipo.idprocesotipo
+    
+
+        
+        salida = editar_tareatipo(str(idtareatipo), nombre, descripcion, dias, orden, cargo)
+        
+        if salida == 1:
+            messages.success(request, 'Tarea Modificada Correctamente')
+                                 
+        else:
+            messages.success(request, 'Tarea no Modificada ')
+            
+        return redirect('editar_proceso', idprocesotipo = idprocesotipo )
+        
+
+    return render(request,'Tareas/editarTarea.html',{'tarea':tarea, 'procesotipo':procesotipo , 'cargos': cargos}  )        
+
+
+def editar_tareatipo(idtareatipo, nombre, descripcion, duracion, orden, cargo):
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    salida = cursor.var(cx_Oracle.NUMBER)
+    cursor.callproc('sp_editar_tareatipo', [idtareatipo,
+                    nombre, descripcion, duracion, orden, cargo, salida])
+    
+    return salida.getvalue()
 	
 
 def usuarios(request):
@@ -255,9 +371,6 @@ def editarEmpresa(request, idempresa):
             
         return redirect('lista_empresa')
         
-              
- 
-
     return render(request,'Empresa/crearEmpresa.html', {'empresa':empresa,'comuna':comuna, 'regiones':regiones,  'region':region } )      
 
 def deshabilitarEmpresa(request, idempresa):
@@ -412,6 +525,13 @@ def agregar_procesotipo(nombre, descripcion, unidad):
     cursor.callproc('sp_agregar_procesotipo',[nombre, descripcion, unidad, salida])
     return salida.getvalue()
 
+def obtener_procesotipo(unidad):
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    salida = cursor.var(cx_Oracle.NUMBER)
+    cursor.callproc('sp_obtener_proceso',[unidad, salida])
+    return salida.getvalue()    
+
 def agregar_unidad(nombre, descripcion, estado, empresa):
     django_cursor = connection.cursor()
     cursor = django_cursor.connection.cursor()
@@ -421,11 +541,11 @@ def agregar_unidad(nombre, descripcion, estado, empresa):
     return salida.getvalue()
 
 
-def agregar_tareatipo(nombre, descripcion, dias, cargo, procesotipo):
+def agregar_tareatipo(nombre, descripcion, dias, orden, cargo, procesotipo):
     django_cursor = connection.cursor()
     cursor = django_cursor.connection.cursor()
     salida = cursor.var(cx_Oracle.NUMBER)
-    cursor.callproc('sp_agregar_tareatipo',[nombre, descripcion, dias, cargo, procesotipo, salida])
+    cursor.callproc('sp_agregar_tareatipo',[nombre, descripcion, dias, orden, cargo, procesotipo, salida])
     return salida.getvalue()   
 
 def unidades_cargos(request):
@@ -450,7 +570,16 @@ def listar_unidades_cargos(unidad_id):
     for fila in out_cursor:
         lista.append(fila)
 
-    return lista     
+    return lista    
+
+def agregar_cargo(nombre, descripcion, estado, unidad):
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    salida = cursor.var(cx_Oracle.NUMBER)
+    cursor.callproc('SP_AGREGAR_CARGO', [
+                    nombre, descripcion, estado, unidad, salida])
+
+    return salida.getvalue()     
 
 
 

@@ -1,13 +1,11 @@
 {% extends 'menuPrincipal.html' %}
-
 {% block content %}
-
 <div class="container">
-  <h4>Agregar Nueva Empresa</h4>
-  <!-- Formulario de ingreso -->
 
-  
-  <p>Para registrar una nueva empresa debe llenar los campos necesarios en este Formulario</p>
+  <h2 class="display-5 font-weight-bold text-secondary mt-lg-n2">
+    Agregar Nuevo <span class="text-primary">Cargo</span>
+  </h2>  <!-- Formulario de ingreso -->
+  <p>Para agregar un nuevo cargo debes completar el siguiente Formulario</p>
 
   <div class="from-group">
     {% if messages %}
@@ -23,160 +21,58 @@
 </div>
   <form method="POST">
     {% csrf_token  %}
-    <div class="form-row">
-      <div class="col-3">
-        <div class="form-group">
-          <label for="rut">Rut</label>
-          <input type="text" class="form-control" name="rut" id="rut" required oninput="checkRut(this)" placeholder="Ingrese RUT" value="{{ empresa.rut }}" >
-          
-         
-        </div>
-      </div>
-
-      <div class="col-9">
-        <div class="form-group">
-          <label for="nombre">Nombre</label>
-          <input id="nombre" class="form-control" type="text" class="validate" name="nombre" required placeholder="Ingrese Nombre " value="{{ empresa.nombre }}">
-        </div>
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label for="rubro">Razon Social</label>
-      <input id="rubro" class="form-control" type="text" class="validate" name="rubro" placeholder="Ingrese Razon Social (Opcional)" value="{{ empresa.razonsocial }}">
-    </div>
 
     <div class="form-row">
-      <div class="col">
+      <div class="col-4">
+        
         <div class="form-group">
-          <label for="region">Seleccione Región</label>
-          <select name="region" class="form-control" id="region" required onchange="cambiarComuna()"  >
-            {% for r in regiones %}
-            <option value="{{ r.0 }}">{{ r.1 }}</option>
+          <label for="empresa">Empresa</label>
+          <select name="empresa" class="form-control" id="empresa" required onchange="cambiarUnidad()" >
+            {% for e in empresas %}
+            <option value="{{ e.0 }}">{{ e.2 }}</option>
             {% endfor %}
           </select>
         </div>
       </div>
-      <div class="col">
+
+      <div class="col-4">
         <div class="form-group">
-          <label for="comuna">Seleccione Comuna</label>
-          <select class="custom-select mr-sm-2" name="comuna" id="comuna"  required >
-            <option selected>Seleccione Comuna...</option>
+          <label class="mr-sm-2" for="unidad">Unidad</label>
+        <select class="custom-select mr-sm-2" name="unidad" id="unidad" >
+          <option selected>Seleccione Unidad...</option>
+        </select> 
           </select>
         </div>
       </div>
+      
     </div>
 
     <div class="form-group">
-      <label for="direccion">Dirección</label>
-      <input id="direccion" class="form-control" type="text" class="validate" name="direccion" required placeholder="Ingrese Dirección " value="{{ empresa.direccion }}">
+      <label for="nombre">Nombre</label>
+      <input id="nombre" type="text" class="form-control" name="nombre">
     </div>
 
-    <div class="form-row">
-      <div class="col">
-        <div class="form-group">
-          <label for="telefono">Telefono</label>
-          <input id="telefono" class="form-control" type="number" class="validate" name="telefono" required maxlength="9" placeholder="Ingrese Telefono " value="{{ empresa.telefono }}">
-        </div>
-      </div>
-      <div class="col">
-        <div class="form-group">
-          <label for="correo">Correo Electronico</label>
-          <input id="correo" class="form-control" type="email" class="validate" name="correo" required placeholder="Ingrese Correo " value="{{ empresa.email }}">
-        </div>
-      </div>
+    <div class="form-group">
+      <label for="descripcion">Descripción</label>
+      <input id="descripcion" type="text" class="form-control"  name="descripcion">
     </div>
 
-    <button class="btn btn-success" type="submit" name="action" value="Guardar">Agregar Empresa</button>
+    <button class="btn btn-success" type="submit" name="action">Agregar Cargo</button>
+
   </form>
 </div>
-
 <script>
-  function cambiarComuna() {
-    
-    let regionid = document.getElementById("region").value;
-    let url = "/mainwork/comuna_region/?region_id=" + regionid;
+  function cambiarUnidad() {
+
+    let empresaid = document.getElementById("empresa").value;
+    let url = "/ejecucion/unidades/?empresa_id=" + empresaid;
     fetch(url)
       .then(function (result) {
         return result.text();
       })
       .then(function (result) {
-        document.getElementById("comuna").innerHTML = result;
+        document.getElementById("unidad").innerHTML = result;
       });
   }
-
-  function checkRut(rut) {
-    // Despejar Puntos
-    var valor = rut.value.replace('.','');
-    // Despejar Guión
-    valor = valor.replace('-','');
-    
-    // Aislar Cuerpo y Dígito Verificador
-    cuerpo = valor.slice(0,-1);
-    dv = valor.slice(-1).toUpperCase();
-    
-    // Formatear RUN
-    rut.value = cuerpo + '-'+ dv
-    
-    // Si no cumple con el mínimo ej. (n.nnn.nnn)
-    if(cuerpo.length < 7) { rut.setCustomValidity("RUT Incompleto"); return false;}
-    
-    // Calcular Dígito Verificador
-    suma = 0;
-    multiplo = 2;
-    
-    // Para cada dígito del Cuerpo
-    for(i=1;i<=cuerpo.length;i++) {
-    
-        // Obtener su Producto con el Múltiplo Correspondiente
-        index = multiplo * valor.charAt(cuerpo.length - i);
-        
-        // Sumar al Contador General
-        suma = suma + index;
-        
-        // Consolidar Múltiplo dentro del rango [2,7]
-        if(multiplo < 7) { multiplo = multiplo + 1; } else { multiplo = 2; }
-  
-    }
-    
-    // Calcular Dígito Verificador en base al Módulo 11
-    dvEsperado = 11 - (suma % 11);
-    
-    // Casos Especiales (0 y K)
-    dv = (dv == 'K')?10:dv;
-    dv = (dv == 0)?11:dv;
-    
-    // Validar que el Cuerpo coincide con su Dígito Verificador
-    if(dvEsperado != dv) { rut.setCustomValidity("RUT Inválido"); return false; }
-    
-    // Si todo sale bien, eliminar errores (decretar que es válido)
-    rut.setCustomValidity('');
-}
-
-
-
 </script>
-
-<script type="text/javascript">
-  $(document).ready(function(){
-
-    var region = "{{ region.idregion }}"
- 
-    if (region != "") 
-    { 
-        $('#region').val(region)
-        cambiarComuna()
-   
-    }
-
-   
-    
-    
-
-  
-  });
-
- 
-  </script>
-
 {% endblock %}

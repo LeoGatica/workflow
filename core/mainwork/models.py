@@ -116,7 +116,7 @@ class ProcesoTipo(models.Model):
     idprocesotipo = models.AutoField(primary_key=True)  
     nombre = models.CharField(max_length=50)
     descripcion = models.CharField(max_length=50)
-    unidad_idunidad = models.ForeignKey(Unidad, on_delete=models.CASCADE)
+    unidad_idunidad = models.ForeignKey(Unidad, on_delete=models.CASCADE, db_column='unidad_idunidad')
 
     class Meta:
         managed = False
@@ -132,11 +132,19 @@ class TareaTipo(models.Model):
     descripcion = models.CharField(max_length=50)
     duraciondias = models.IntegerField()
     orden_tarea = models.IntegerField()
-    cargo_idcargo = models.ForeignKey(Cargo, on_delete=models.CASCADE)
-    idprocesotipo = models.ForeignKey(ProcesoTipo, on_delete=models.CASCADE)
+    cargo_idcargo = models.ForeignKey(Cargo, on_delete=models.CASCADE, db_column='cargo_idcargo')
+    idprocesotipo = models.ForeignKey(ProcesoTipo, on_delete=models.CASCADE, db_column='idprocesotipo')
+
+
+    class Meta:
+        managed = False
+        db_table = 'tareatipo'
+        
+
 
     def __str__(self):
         return self.nombre
+
 
 
 

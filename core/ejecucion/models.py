@@ -21,7 +21,6 @@ class Procesoejecutado(models.Model):
         managed = False
         db_table = 'procesoejecutado'
 
-
 class Tareaejecutada(models.Model):
     idtareaejecutada = models.BigIntegerField(primary_key=True)
     idprocesoejecutado = models.ForeignKey(Procesoejecutado, models.DO_NOTHING, db_column='idprocesoejecutado')
@@ -30,12 +29,13 @@ class Tareaejecutada(models.Model):
     avance = models.BigIntegerField(blank=True, null=True)
     duracion_dias = models.BigIntegerField(blank=True, null=True)
     orden_tarea = models.BigIntegerField(blank=True, null=True)
-    idestadotarea = models.ForeignKey(Estadotarea, models.DO_NOTHING, db_column='idestadotarea')
+    idestadotarea = models.ForeignKey(Estadotarea, models.DO_NOTHING,db_column='idestadotarea' )
     semaforo_idsemaforo = models.ForeignKey(Semaforo, models.DO_NOTHING, db_column='semaforo_idsemaforo')
 
     class Meta:
         managed = False
         db_table = 'tareaejecutada'
+
 
 class Responsabletarea(models.Model):
     idresponsabletareausuario = models.BigIntegerField(primary_key=True)

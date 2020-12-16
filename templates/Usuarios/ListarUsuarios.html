@@ -2,18 +2,22 @@
 
 {% block content %}
 <div class="container-fluid">
+  <h2 class="display-5 font-weight-bold text-secondary mt-lg-n2">
+    Usuarios del <span class="text-primary"> Sistema</span>
+  </h2>
+  <p>Lista de usuarios del sistema</p>
 
-  <h4>Lista de Usuarios</h4>
-
-  <table class="table table-striped table-sm">
-    <tr>
-      <th>Rol</th>
-      <th>Rut</th>
-      <th>Nombre</th>
-      <th>Direccion</th>
-      <th>Telefono</th>
-      <th>Correo</th>
-    </tr>
+  <table class="table table-striped">
+    <thead class="bg-dark text-white text-center">
+      <tr>
+        <th>Rol</th>
+        <th>Rut</th>
+        <th>Nombre</th>
+        <th>Direccion</th>
+        <th>Telefono</th>
+        <th>Correo</th>
+      </tr>
+    </thead>
 
     {% for u in usuarios %}
     <tr>

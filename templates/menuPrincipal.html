@@ -1,329 +1,483 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="">
-  <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
-  <meta name="generator" content="Jekyll v4.1.1">
-  <title>Process · Dashboard</title>
-  {% load static %}
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
-    integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    {% load static %}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content=""> {% if user.rol_id == 1 or user.rol_id == 2 %}
+    <title>Process</title>
+    <!-- Cargar el Favicon -->
+    <link rel="icon" href="{% static 'img/favicon.ico'%}"> {% else %}
+    <title>Workflow</title>
+    <!-- Cargar el Favicon -->
+    <link rel="icon" href="{% static 'img/workflow_fav.png'%}"> {% endif %}
 
-  <!-- Para los graficos -->
-  <script src="https://code.highcharts.com/highcharts.js"></script>
-  <script src="https://code.highcharts.com/modules/data.js"></script>
-  <script src="https://code.highcharts.com/modules/drilldown.js"></script>
-  <script src="https://code.highcharts.com/modules/exporting.js"></script>
-  <script src="https://code.highcharts.com/modules/export-data.js"></script>
-  <script src="https://code.highcharts.com/modules/accessibility.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/workflow.css' %}" rel="stylesheet">
 
-  <!-- Custom styles for this template -->
-  <!-- CSS personalizado para Workflow-->
-  <link href="{% static 'css/dashboard.css' %}" rel="stylesheet">
-  <link href="{% static 'css/workflow.css' %}" rel="stylesheet">
+
+    <!-- Custom fonts for this template-->
+    <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+    <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"
+        integrity="sha512-d9xgZrVZpmmQlfonhQUvTR7lMPtO7NkZMkA0ABN3PHCbKA5nqylQ/yWlFAyY6hYgdF1Qh6nYiuADWwKB4C2WSw=="
+        crossorigin="anonymous"></script>
+
 
 </head>
-{% if user.is_authenticated %}
 
-           
-<body>
-  <!-- Barra superior -->
-  <nav class="navbar navbar-dark sticky-top
-              {% if user.rol_id == 1 or user.rol_id == 2 %} 
-                bg-dark
-              {% else %}
-                bg-wf
-              {% endif %}
-              flex-md-nowrap p-0 shadow">
-    <a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3 {% if user.rol_id == 1 or user.rol_id == 2 %} 
-    bg-dark
-  {% else %}
-    bg-wf
-  {% endif %} " href="#">
-      {% if user.rol_id == 1 %} <img src="{% static 'img/process_s.png' %}" class="img-fluid rounded mx-auto d-block"> {% endif %}
-      {% if user.rol_id == 2 %} <img src="{% static 'img/process_s.png' %}" class="img-fluid rounded mx-auto d-block"> {% endif %}
-      {% if user.rol_id == 3 %} <img src="{% static 'img/workflow.png' %}" class="img-fluid rounded mx-auto d-block"> {% endif %}
-      {% if user.rol_id == 4 %} <img src="{% static 'img/workflow.png' %}" class="img-fluid rounded mx-auto d-block"> {% endif %}
-      {% if user.rol_id == 5 %} <img src="{% static 'img/workflow.png' %}" class="img-fluid rounded mx-auto d-block"> {% endif %}
-      
-    </a>
-    <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-toggle="collapse"
-      data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <!-- <input class="form-control form-control-dark w-100 text-white" type="text" placeholder="Search" aria-label="Search"> -->
-    <ul class="navbar-nav px-3">
-      <li class="nav-item text-nowrap">
-        <a class="nav-link text-white" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
-      </li>
-    </ul>
-  </nav>
+<body id="page-top">
 
-  <!-- Contenido del Sidebar-->
-  <div class="container-fluid">
-    <div class="row">
-      <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
-        <div class="sidebar-sticky pt-3">
-          <ul class="nav flex-column">
-            <li class="nav-item">
-              <span class="navbar-text container">
-                <div class="container">
-                  <img src="{% static 'img/user.jpg' %}" class="rounded mx-auto d-block">
-                  <div class="font-weight-bold"></div>
-                  <br>
-                  
-                  <div>{{ user.nombres }} {{ user.apellidos }}</div>
-                  <div>{{ user.correo }}</div>
-                  <div>{{ request.session.EmpresaUsuario }}</div>
+    <!-- Page Wrapper -->
+    <div id="wrapper">
 
-                  {% if user.rol_id == 3 %}
-                  
-                  <div>{{ request.session.UnidadUsuario }}</div>
-                  <div>{{ request.session.CargoUsuario }}</div>
-                  {% endif %}
-                  {% if user.rol_id == 4 %}
-                  
-                  <div>{{ request.session.UnidadUsuario }}</div>
-                  <div>{{ request.session.CargoUsuario }}</div>
-                  {% endif %}
-                  {% if user.rol_id == 5 %}
-                  
-                  <div>{{ request.session.UnidadUsuario }}</div>
-                  <div>{{ request.session.CargoUsuario }}</div>
-                  {% endif %}
-                  <br>
-                  <div class="text-info font-weight-bold">{% if user.rol_id == 1 %} Administrador {% endif %}</div>
-                  <div class="text-info font-weight-bold">{% if user.rol_id == 2 %} Diseñador {% endif %}</div>
-                  <div class="text-primary font-weight-bold">{% if user.rol_id == 3 %} Gerente {% endif %}</div>
-                  <div class="text-primary font-weight-bold">{% if user.rol_id == 4 %} Jefe {% endif %}</div>
-                  <div class="text-primary font-weight-bold">{% if user.rol_id == 5 %} Funcionario {% endif %}</div>
-                </div>
-              </span>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'lista_procesos'%}">
-                <span data-feather="home"></span>
-                Dashboard
-              </a>
-            </li>
-            {% if user.rol_id == 1 %}
-            <li class="nav-item">
-              <div id="accordion">
-                <div class="card">
-                  <div class="card-header">
-                    <span data-feather="users"></span>
-                    <a class="card-link text-dark" data-toggle="collapse" href="#collapseOne">
-                      Gestión de Usuarios
-                    </a>
-                  </div>
-                  <div id="collapseOne" class="collapse" data-parent="#accordion">
-                    <div class="card-body">
-                      <a class="waves-effect text-dark" href="{% url 'registrarse' %}"><i class="fas fa-user-plus"></i>
-                        Agregar</a>
-                    </div>
-                    <div class="card-body">
-                      <a class="waves-effect text-dark" href="{% url 'lista_usuarios' %}"><i class="fas fa-list-ul"></i>
-                        Listar</a>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="card">
-                  <div class="card-header">
-                    <i class="fas fa-building"></i>
-                    <a class="collapsed card-link text-dark" data-toggle="collapse" href="#collapseTwo">
-                      Gestión de Empresas </a>
-                  </div>
-                  <div id="collapseTwo" class="collapse" data-parent="#accordion">
-                    <div class="card-body">
-                      <a class="waves-effect text-dark" href="{% url 'empresa' %}"><i class="fas fa-building"></i>
-                        Agregar</a>
-                    </div>
-                    <div class="card-body">
-                      <a class="waves-effect text-dark" href="{% url 'lista_empresa' %}"><i class="fas fa-list-ul"></i>
-                        Listar</a>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="card">
-                  <div class="card-header">
-                    <i class="fas fa-archive"></i>
-                    <a class="collapsed card-link text-dark" data-toggle="collapse" href="#collapseThree">
-                      Gestión de Unidades
-                    </a>
-                  </div>
-                  <div id="collapseThree" class="collapse" data-parent="#accordion">
-                    <div class="card-body">
-                      <a class="waves-effect text-dark" href="{% url 'unidad' %}"><i class="fas fa-archive"></i>
-                        Agregar</a>
-                    </div>
-                    <div class="card-body">
-                      <a class="waves-effect text-dark" href="{% url 'lista_unidad' %}"><i class="fas fa-list-ul"></i>
-                        Listar</a>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="card">
-                  <div class="card-header">
-                    <i class="fas fa-archive"></i>
-                    <a class="collapsed card-link text-dark" data-toggle="collapse" href="#collapseThree">
-                      Gestión de Cargos
-                    </a>
-                  </div>
-                  <div id="collapseThree" class="collapse" data-parent="#accordion">
-                    <div class="card-body">
-                      <a class="waves-effect text-dark" href="#"><i class="fas fa-archive"></i>
-                        Agregar</a>
-                    </div>
-                    <div class="card-body">
-                      <a class="waves-effect text-dark" href="#"><i class="fas fa-list-ul"></i>
-                        Listar</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </li>
-            {% endif %}
-          </ul>
-
-          <!-- Aqui inicia la sección de procesos -->
-
-          <ul class="nav flex-column">
-
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'ejecutar_proceso' %}">
-                <span data-feather="settings"></span>
-                Procesos y ejecución
-              </a>
-            </li>
-            <li class="nav-item">
-              <div id="accordion">
-
-                <div class="card">
-                  <div class="card-header">
-                    <i class="fas fa-cogs"></i>
-                    <a class="collapsed card-link text-dark" data-toggle="collapse" href="#collapseFour">
-                      Procesos
-                    </a>
-                  </div>
-                  <div id="collapseFour" class="collapse" data-parent="#accordion">
-                    <div class="card-body">
-                      <a class="waves-effect text-dark" href="{% url 'proceso' %}"><i class="fas fa-archive"></i>
-                        Crear Proceso</a>
-                    </div>
-                    <div class="card-body">
-                      <a class="waves-effect text-dark" href=""><i class="fas fa-list-ul"></i>
-                        Listar Procesos Tarea</a>
-                    </div>
-                    <div class="card-body">
-                      <a class="waves-effect text-dark" href="{% url 'tarea' %}"><i class="fas fa-list-ul"></i>
-                        Crear Tarea</a>
-                    </div>
-					
-					<div class="card-body">
-                      <a class="waves-effect text-dark" href="{% url 'tareas' %}"><i class="fas fa-list-ul"></i>
-                        Terminar Tarea</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </li>
-          </ul>
-
-
-
-          <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-            <span>Aquí puede ir algo más</span>
-            <a class="d-flex align-items-center text-muted" href="#" aria-label="Add a new report">
-              <span data-feather="plus-circle"></span>
+        <!-- Sidebar -->
+        {% if user.rol_id == 1 or user.rol_id == 2 %}
+        <ul class="navbar-nav bg-process sidebar sidebar-dark accordion" id="accordionSidebar">
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
+                <img src="{% static 'img/Process_small.png' %}" alt="" style="width: 100%;">
             </a>
-          </h6>
-          <ul class="nav flex-column mb-2">
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <span data-feather="bar-chart-2"></span>
-                Reportes
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <span data-feather="file-text"></span>
-                Last quarter
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <span data-feather="file-text"></span>
-                Social engagement
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <span data-feather="file-text"></span>
-                Year-end sale
-              </a>
-            </li>
-          </ul>
+            {% else %}
+            <ul class="navbar-nav bg-wf sidebar sidebar-dark accordion" id="accordionSidebar">
+                <!-- Sidebar - Brand -->
+                <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
+                    <img src="{% static 'img/Workflow_b.png' %}" alt="" style="width: 100%;">
+                </a>
+                {% endif %}
+
+
+
+                <!-- Divider -->
+                <hr class="sidebar-divider my-0">
+
+                <!-- Nav Item - Dashboard -->
+
+                <!-- URLs del Dashboard segun el rol -->
+                <li class="nav-item active">
+                    {% if user.rol_id == 1 %}
+                    <a class="nav-link" href="{% url 'lista_procesos_process'%}">
+                        <i class="fas fa-fw fa-tachometer-alt"></i>
+                        <span>Dashboard <span class="text-process"> Administrador</span></span>
+                        {% elif user.rol_id == 2 %}
+                        <a class="nav-link" href="{% url 'lista_procesos_process'%}">
+                            <i class="fas fa-fw fa-tachometer-alt"></i>
+                            <span>Dashboard <span class="text-process"> Diseñador</span></span>
+                            {% elif user.rol_id == 3 %}
+                            <a class="nav-link" href="{% url 'lista_procesos_gerente'%}">
+                                <i class="fas fa-fw fa-tachometer-alt"></i>
+                                <span>Dashboard <span class="text-wf"> Gerente</span></span>
+                                {% elif user.rol_id == 4 %}
+                                <a class="nav-link" href="{% url 'lista_procesos_jefe'%}">
+                                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                                    <span>Dashboard <span class="text-wf"> Jefe</span></span>
+                                    {% elif user.rol_id == 5 %}
+                                    <a class="nav-link" href="{% url 'lista_procesos_funcionario'%}">
+                                        <i class="fas fa-fw fa-tachometer-alt"></i>
+                                        <span>Dashboard <span class="text-wf"> Funcionario</span></span>
+                                        {% endif %}
+                                    </a>
+                </li>
+
+
+                <!-- Divider -->
+                <hr class="sidebar-divider">
+
+
+                <!-- Heading -->
+
+                <!-- Paneles Exclusivos de Administrador-->
+                {% if user.rol_id == 1 %}
+                <div class="sidebar-heading">
+                    Panel de Gestión
+                </div>
+
+                <!-- Nav Item - Pages Collapse Menu -->
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
+                        aria-expanded="true" aria-controls="collapseTwo">
+                        <i class="fas fa-fw fa-user"></i>
+                        <span>Usuarios</span>
+                    </a>
+                    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <h6 class="collapse-header">Usuarios:</h6>
+                            <a class="collapse-item" href="{% url 'registrarse' %}">Agregar</a>
+                            <a class="collapse-item" href="{% url 'lista_usuarios' %}">Listar</a>
+                        </div>
+                    </div>
+                </li>
+
+                <!-- Nav Item - Utilities Collapse Menu -->
+
+                <div class="sidebar-heading">
+                    Empresas
+                </div>
+
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseEmpresas"
+                        aria-expanded="true" aria-controls="collapseEmpresas">
+                        <i class="fas fa-fw fa-building"></i>
+                        <span>Panel de Empresas</span>
+                    </a>
+                    <div id="collapseEmpresas" class="collapse" aria-labelledby="headingUtilities"
+                        data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <h6 class="collapse-header">Gestión Empresas:</h6>
+                            <a class="collapse-item" href="{% url 'empresa' %}">Agregar</a>
+                            <a class="collapse-item" href="{% url 'lista_empresa' %}">Listar</a>
+                        </div>
+                    </div>
+                </li>
+
+                <div class="sidebar-heading">
+                    Unidades en Empresas
+                </div>
+
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUnidades"
+                        aria-expanded="true" aria-controls="collapseUnidades">
+                        <i class="fas fa-fw fa-briefcase"></i>
+                        <span>Unidades de Empresas</span>
+                    </a>
+                    <div id="collapseUnidades" class="collapse" aria-labelledby="headingUtilities"
+                        data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <h6 class="collapse-header">Gestión de Unidades:</h6>
+                            <a class="collapse-item" href="{% url 'unidad' %}">Agregar</a>
+                            <a class="collapse-item" href="{% url 'lista_unidad' %}">Listar</a>
+                        </div>
+                    </div>
+                </li>
+
+                <div class="sidebar-heading">
+                    Cargos en Empresas
+                </div>
+
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCargos"
+                        aria-expanded="true" aria-controls="collapseCargos">
+                        <i class="fas fa-fw fa-user-tie"></i>
+                        <span>Gestión de Cargos</span>
+                    </a>
+                    <div id="collapseCargos" class="collapse" aria-labelledby="headingUtilities"
+                        data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <h6 class="collapse-header">Gestión de Cargos:</h6>
+                            <a class="collapse-item" href="{% url 'cargos'%}">Agregar</a>
+                            <a class="collapse-item" href="{% url 'lista_cargo'%}">Listar</a>
+                        </div>
+                    </div>
+                </li>
+                {% endif %}
+                <!-- Divider -->
+                {% if user.rol_id == 2 or user.rol_id == 1 %}
+                <hr class="sidebar-divider">
+                <!-- Paneles de Diseñador y admin de Process-->
+
+                <div class="sidebar-heading">
+                    Gestión de Procesos
+                </div>
+
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseProcesos"
+                        aria-expanded="true" aria-controls="collapseProcesos">
+                        <i class="fas fa-fw fa-wrench"></i>
+                        <span>Gestión de Procesos</span>
+                    </a>
+                    <div id="collapseProcesos" class="collapse" aria-labelledby="headingUtilities"
+                        data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <h6 class="collapse-header">Gestión de Flujos:</h6>
+                            <a class="collapse-item" href="{% url 'proceso' %}">Crear Flujo</a>
+                            <a class="collapse-item" href="{% url 'listar_procesos_tarea_tipo' %}">Flujos de Trabajo</a>
+                        </div>
+                    </div>
+                </li>
+                <hr class="sidebar-divider">
+
+                {% endif %}
+                <!-- Divider -->
+                {% if user.rol_id == 4 or user.rol_id == 3 %}
+
+                <!-- Paneles de Jefes-->
+
+                <div class="sidebar-heading">
+                    Flujos de Trabajo y ejecución
+                </div>
+
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseFlujos"
+                        aria-expanded="true" aria-controls="collapseFlujos">
+                        <i class="fas fa-fw fa-wrench"></i>
+                        <span>Gestión de Procesos</span>
+                    </a>
+                    <div id="collapseFlujos" class="collapse" aria-labelledby="headingUtilities"
+                        data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <h6 class="collapse-header">Gestión de Procesos</h6>
+                            <a class="collapse-item" href="{% url 'ejecutar_proceso' %}">Activar Flujo</a>
+                            <a class="collapse-item" href="{% url 'proceso_asignar'%}">Asignar Responsables</a>
+                        </div>
+                    </div>
+                </li>
+                {% endif %}
+
+                <!-- Divider -->
+                {% if user.rol_id == 4 or user.rol_id == 3 or user.rol_id == 5 %}
+
+                <!-- Paneles de Funcionario-->
+
+                <div class="sidebar-heading">
+                    Tareas
+                </div>
+
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTareas"
+                        aria-expanded="true" aria-controls="collapseTareas">
+                        <i class="fas fa-fw fa-wrench"></i>
+                        <span>Tareas</span>
+                    </a>
+                    <div id="collapseTareas" class="collapse" aria-labelledby="headingUtilities"
+                        data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <h6 class="collapse-header">Panel de tareas:</h6>
+                            <a class="collapse-item" href="{% url 'tareas'%}">Mis Tareas</a>
+                            <a class="collapse-item" href="{% url 'historial_tareas_usuario'%}">Historial de Tareas</a>
+                            {% if user.rol_id == 3 %}
+                            <a class="collapse-item" href="{% url 'historial_tareas_usuario'%}">Historial de Tareas</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </li>
+                {% endif %}
+
+
+                <!-- Paneles de Gerencia-->
+                {% if user.rol_id == 3 %}
+
+                <div class="sidebar-heading">
+                    Reportes
+                </div>
+
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseReportes"
+                        aria-expanded="true" aria-controls="collapseReportes">
+                        <i class="fas fa-fw fa-wrench"></i>
+                        <span>Reportes</span>
+                    </a>
+                    <div id="collapseReportes" class="collapse" aria-labelledby="headingUtilities"
+                        data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <h6 class="collapse-header">Reportes:</h6>
+                            <a class="collapse-item" href="{% url 'tareas'%}">Flujos de Trabajo</a>
+                            <a class="collapse-item" href="#">Rendimiento Tareas</a>
+                            <a class="collapse-item" href="#">Historial de Tareas</a>
+                        </div>
+                    </div>
+                </li>
+                {% endif %}
+
+                <!-- Divider -->
+            
+
+                <!-- Heading -->
+               
+
+                <!-- Divider -->
+               
+
+                <!-- Sidebar Toggler (Sidebar) -->
+                <div class="text-center d-none d-md-inline">
+                    <button class="rounded-circle border-0" id="sidebarToggle"></button>
+                </div>
+
+            </ul>
+            <!-- End of Sidebar -->
+
+            <!-- Content Wrapper -->
+            <div id="content-wrapper" class="d-flex flex-column">
+
+                <!-- Main Content -->
+                <div id="content">
+
+                    <!-- Topbar -->
+
+                    {% if user.rol_id == 1 or user.rol_id == 2 %}
+                    <nav class="navbar navbar-expand navbar-light bg-orange topbar mb-4 static-top shadow">
+                        {% else %}
+                        <nav class="navbar navbar-expand navbar-light bg-wfhead topbar mb-4 static-top shadow">
+                            {% endif %}
+
+
+                            <!-- Sidebar Toggle (Topbar) -->
+                            <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                                <i class="fa fa-bars text-process"></i>
+                            </button>
+
+                            <!-- Topbar Navbar -->
+                            <ul class="navbar-nav ml-auto">
+                                <h3 onkeyup="notificacionUsuario()"></h3>
+                                <div name="id_usuario" id="id_usuario" data-value="{{ user.id }}"></div>
+
+                                <!-- Nav Item - Alerts -->
+                                <li id="notificacion" class="nav-item dropdown no-arrow mx-1">
+                                    
+                                </li>
+
+                                <!-- Nav Item - Messages -->
+                                <h3 onkeydown="mensajeUsuario()"></h3>
+                                <li id="mensaje" class="nav-item dropdown no-arrow mx-1">
+                                    
+                                </li>
+
+                                <div class="topbar-divider d-none d-sm-block"></div>
+
+                                <!-- Nav Item - User Information -->
+                                <li class="nav-item dropdown no-arrow">
+                                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <span class="mr-2 d-none d-lg-inline text-white small">{{ user.nombres }}
+                                            {{ user.apellidos }}</span>
+                                        <img class="img-profile rounded-circle"
+                                            src="{% static 'img/undraw_profile.svg' %}">
+                                    </a>
+
+                                    <!-- Dropdown - User Information -->
+                                    <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                        aria-labelledby="userDropdown">
+                                        <a class="dropdown-item" href="#">
+                                            <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i> Perfil
+                                        </a>
+                                        <a class="dropdown-item" href="#">
+                                            <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i> Configuración
+                                        </a>
+
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="#" data-toggle="modal"
+                                            data-target="#logoutModal">
+                                            <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i> Cerrar
+                                            Sesión
+                                        </a>
+                                    </div>
+                                </li>
+
+                            </ul>
+
+                        </nav>
+                        <!-- End of Topbar -->
+
+                        <!-- Begin Page Content -->
+                        <div class="container-fluid">
+                            <!-- Aqui se llena de contenido -->
+                            {% block content %} {% endblock %}
+                        </div>
+
+
+                        <!-- /.container-fluid -->
+
+                </div>
+                <!-- End of Main Content -->
+
+                <!-- Footer -->
+                <footer class="sticky-footer bg-white">
+                    <div class="container my-auto">
+                        <div class="copyright text-center my-auto">
+                            <span>Desarrollado - Workflow 2020</span>
+                        </div>
+                    </div>
+                </footer>
+                <!-- End of Footer -->
+
+            </div>
+            <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">¿Realmente quiere salir?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Seleccione "Salir" si está de acuerdo con cerrar esta sesión.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                    <a class="btn btn-primary" href="{% url 'logout' %}">Salir</a>
+                </div>
+            </div>
         </div>
-      </nav>
     </div>
-  </div>
 
-  <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
-    <div
-      class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <!-- Bootstrap core JavaScript-->
+    <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 
-      <!-- Aqui se llena de contenido -->
-      {% block content %}
+    <!-- Core plugin JavaScript-->
+    <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
 
-      {% endblock %}
+    <!-- Custom scripts for all pages-->
+    <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
 
-    </div>
-  </main>
+    <!-- Page level plugins -->
+    <script src="{% static 'vendor/chart.js/Chart.min.js' %}"></script>
 
-  <script type="text/javascript">
-    $(document).ready(function(){
-      $("#myInput").on("keyup", function() {
-        var value = $(this).val().toLowerCase();
-        $("#tabla tr").filter(function() {
-          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-        });
-      });
+    <!-- Page level custom scripts -->
+    <script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
 
-     
+    <script>
+        window.onkeyup = function notificacionUsuario() {
 
-
-    
-    });
+            var idusuario = document.getElementById('id_usuario').getAttribute('data-value');
+            let url = "/ejecucion/notificacion/?id_usuario=" + idusuario;
+            fetch(url)
+                .then(function (result) {
+                    return result.text();
+                })
+                .then(function (result) {
+                    document.getElementById("notificacion").innerHTML = result;
+                });
+        }
     </script>
 
-  <!-- Optional JavaScript -->
-  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-    crossorigin="anonymous"></script>
+    <script>
+        window.onkeydown = function mensajeUsuario() {
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"
-    integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh"
-    crossorigin="anonymous"></script>
+            var idusuario = document.getElementById('id_usuario').getAttribute('data-value');
+            let url = "/ejecucion/mensaje/?id_usuario=" + idusuario;
+            fetch(url)
+                .then(function (result) {
+                    return result.text();
+                })
+                .then(function (result) {
+                    document.getElementById("mensaje").innerHTML = result;
+                });
+        }
+    </script>
 
-  <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
-  <script src="{% static 'js/bootstrap.min.js' %}"></script>
-  <script src="{% static 'js/dashboard.js' %}"></script>
 
- 
+
 </body>
 
-{% endif %}
 
 
 </html>
